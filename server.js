@@ -1,13 +1,11 @@
-var http = require('http');
-var Router = require('node-router');
+var express = require('express');
+var app = express();
+var handler = new require('./js/handlers.js')();
 
-var router = Router();
-var route = router.push;
+app.get('/', handler.render('index.html'));
 
-route('GET', '/', function(request, response, next) {
-  response.send("Hello World!");
+app.use(express.static('./views'));
+
+app.listen(8000, function() {
+  console.log("Server listening on 127.0.0.1:8000");
 });
-
-var server = http.createServer(router).listen(8000);
-
-console.log("Server listening on 127.0.0.1:8000");
