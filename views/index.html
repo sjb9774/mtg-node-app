@@ -5,25 +5,35 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <link rel='stylesheet' href='/views/css/home.css' type='text/css'>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-rc1/jquery.js"></script>
+    <script src="/views/js/cards.js"></script>
     <script src="/views/js/home.js"></script>
   </head>
   <body>
     <div class="container-fluid">
       <!-- Card display -->
-      <div id="card-display" class="row">
+      <div id="card-display" class="row background-gold">
+        <div id='overlay'></div>
         <div class="col-xs-12">
+
           <div id="card-image-wrapper">
-            <img class="center-block" id="card-image" src="http://gatherer.wizards.com/Handlers/Image.ashx?multiverseid=159408&type=card">
+            <a id='start-button' class='btn btn-primary'>Start</a>
+            <img class="center-block empty" id="card-image" src="https://microsoftstudios.com/hololens/wp-content/uploads/sites/4/2016/01/mtg-card-back.jpg">
           </div>
         </div>
       </div>
 
       <!-- Card info -->
-      <div id="card-info-wrapper">
-        <div class="row">
-          <div class="col-xs-12 text-center">
-            <h1>Reaper King</h1>
-          </div>
+      <div class="row">
+        <div id="all-sets" class="col-xs-12 hidden">
+        </div>
+        <div id="all-arts" class="col-xs-12 hidden">
+        </div>
+      </div>
+      <div id="card-info-wrapper" class="row hidden">
+        <div class="col-xs-12 text-center">
+          <h1 id='card-name'></h1>
+          <h3 id='card-set'></h3>
+          <p id='rules-text'></p>
         </div>
       </div>
 
