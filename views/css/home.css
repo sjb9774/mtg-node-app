@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-  color: #fff;
+  color: #000;
   /*background-color: #171717;*/
   background-color: #fff;
 }
@@ -13,6 +13,16 @@ body {
   border-bottom: 20px solid transparent;
   border-image: linear-gradient(to bottom, rgba(0,0,0,0) 99.8%, rgba(0,0,0,.4) 100%);
   border-image-slice: 1;
+  transition: background .5s ease;
+}
+
+#card-display::before {
+  background: repeating-linear-gradient(90deg,
+                                        rgba(30, 30, 30, 1),
+                                        rgba(30, 30, 30, 1) 10%,
+                                        rgba(70, 70, 70, 1) 10%,
+                                        rgba(70, 70, 70, 1) 20%);
+  content: ' ';
 }
 
 #card-image-wrapper {
@@ -22,6 +32,29 @@ body {
 #card-image {
   border-radius: 10px;
   box-shadow: 0px 5px 15px rgba(0, 0, 0, .8);
+}
+
+#card-spinner {
+  color: #c6c6c6;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  font-size: 20pt;
+  padding: 10px 20px;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 10;
+  animation: 1s spin;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
+
+@keyframes spin {
+  from {
+    transform: translateX(-50%) translateY(-50%) rotate(0deg);
+  }
+  to {
+    transform: translateX(-50%) translateY(-50%) rotate(360deg);
+  }
 }
 
 #all-sets {
@@ -55,64 +88,96 @@ body {
   background-color: rgba(0,0,0,.5);
 }
 
+.set-list {
+  color: #fff;
+  line-height: 22pt;
+  text-align: center;
+  padding: 0px;
+}
+
+.card-set {
+  display: inline-block;
+  color: #fff;
+  margin: 0px 10px;
+}
+
+.current-set {
+  color: #847b7b;
+}
+
 .empty {
   width: 223px;
   height: 310px;
 }
 
+.fade-out {
+  transition: .25s ease-out;
+  opacity: 0;
+}
+
+.fade-in {
+  transition: .25s ease-out;
+  opacity: 1;
+}
+
 
 .background-red {
+  transition: .25s ease-out;
   background: repeating-linear-gradient(90deg,
-                                        rgba(100, 0, 0, .7),
-                                        rgba(100, 0, 0, .7) 10%,
-                                        rgba(180, 0, 0, .7) 10%,
-                                        rgba(180, 0, 0, .7) 20%);
+                                        rgba(40, 0, 0, 1),
+                                        rgba(40, 0, 0, 1) 10%,
+                                        rgba(90, 0, 0, 1) 10%,
+                                        rgba(90, 0, 0, 1) 20%);
 }
 
 .background-blue {
+  transition: .25s ease-out;
   background: repeating-linear-gradient(90deg,
-                                        rgba(0, 0, 100, .7),
-                                        rgba(0, 0, 100, .7) 10%,
-                                        rgba(0, 0, 180, .7) 10%,
-                                        rgba(0, 0, 180, .7) 20%);
+                                        rgba(0, 0, 40, 1),
+                                        rgba(0, 0, 40, 1) 10%,
+                                        rgba(0, 0, 90, 1) 10%,
+                                        rgba(0, 0, 90, 1) 20%);
 }
 
 .background-white {
+  transition: .25s ease-out;
   background: repeating-linear-gradient(90deg,
-                                        rgba(180, 180, 180, .7),
-                                        rgba(180, 180, 180, .7) 10%,
-                                        rgba(255, 255, 255, .7) 10%,
-                                        rgba(255, 255, 255, .7) 20%);
+                                        rgba(180, 180, 180, 1),
+                                        rgba(180, 180, 180, 1) 10%,
+                                        rgba(255, 255, 255, 1) 10%,
+                                        rgba(240, 240, 240, 1) 20%);
 }
 
-.backgroud-green {
+.background-green {
+  transition: .25s ease-out;
   background: repeating-linear-gradient(90deg,
-                                        rgba(0, 100, 0, .7),
-                                        rgba(0, 100, 0, .7) 10%,
-                                        rgba(0, 180, 0, .7) 10%,
-                                        rgba(0, 180, 0, .7) 20%);
+                                        rgba(0, 40, 0, 1),
+                                        rgba(0, 40, 0, 1) 10%,
+                                        rgba(0, 90, 0, 1) 10%,
+                                        rgba(0, 90, 0, 1) 20%);
 }
 
 .background-brown {
   background: repeating-linear-gradient(90deg,
-                                        rgba(160, 80, 0, .7),
-                                        rgba(160, 80, 0, .7) 10%,
-                                        rgba(120, 40, 0, .7) 10%,
-                                        rgba(120, 40, 0, .7) 20%);
+                                        rgba(50, 25, 0, 1),
+                                        rgba(50, 25, 0, 1) 10%,
+                                        rgba(80, 30, 0, 1) 10%,
+                                        rgba(80, 30, 0, 1) 20%);
 }
 
 .background-black {
+  transition: .25s ease-out;
   background: repeating-linear-gradient(90deg,
-                                        rgba(30, 30, 30, .7),
-                                        rgba(30, 30, 30, .7) 10%,
-                                        rgba(70, 70, 70, .7) 10%,
-                                        rgba(70, 70, 70, .7) 20%);
+                                        rgba(30, 30, 30, 1),
+                                        rgba(30, 30, 30, 1) 10%,
+                                        rgba(70, 70, 70, 1) 10%,
+                                        rgba(70, 70, 70, 1) 20%);
 }
 
 .background-gold {
   background: repeating-linear-gradient(90deg,
-                                        rgba(230, 150, 0, .7),
-                                        rgba(230, 150, 0, .7) 10%,
-                                        rgba(200, 120, 0, .7) 10%,
-                                        rgba(200, 120, 0, .7) 20%);
+                                        rgba(150, 50, 0, 1),
+                                        rgba(150, 50, 0, 1) 10%,
+                                        rgba(100, 30, 0, 1) 10%,
+                                        rgba(100, 30, 0, 1) 20%);
 }

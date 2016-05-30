@@ -1,3 +1,4 @@
+/* Model that encapsulates card data */
 var Card = function(cardName, setCode) {
   this.name = cardName;
   this.setCode = setCode;
@@ -11,36 +12,74 @@ Card.prototype.populate = function() {
     'success': function(resp) {
       if (resp) {
         var cardData = resp['cards'][0];
-        self.name = cardData.name;
-        self.setCode = cardData.set;
-        self.cmc = cardData.cmc;
-        self.multiverseId = cardData.multiverseId;
-        self.rulesText = cardData.rulesText;
-        self.types = cardData.types;
-        self.colors = cardData.colors;
-        self.manaCost = cardData.manaCost;
-        self.imageUrl = cardData.imageUrl;
-        self.populated = true;
-        $(self).trigger('populated');
+        self._populate(cardData);
+        $(self).trigger('populateEnd');
       }
       else {
         $(self).trigger('populateFail');
       }
     }
   });
+  $(self).trigger('populateStart');
+};
+
+Card.prototype._populate = function(cardData) {
+  var self = this;
+  self.name = cardData.name;
+  self.allSets = cardData.allSets;
+  self.setCode = cardData.set;
+  self.cmc = cardData.cmc;
+  self.multiverseId = cardData.multiverseId;
+  self.rulesText = cardData.rulesText;
+  self.types = cardData.types;
+  self.colors = cardData.colors;
+  self.manaCost = cardData.manaCost;
+  self.imageUrl = cardData.imageUrl;
+  self.populated = true;
+};
+
+Card.prototype.random = function(callback) {
+  var self = this;
+  $(self).trigger('populateStart');
+  $.get({
+    'url': '/api/card/random',
+    'success': function(resp) {
+      if (resp) {
+        var cardData = resp['cards'][0];
+        self._populate(cardData);
+        $(self).trigger('populateEnd');
+        callback(self);
+      }
+    }
+  });
 }
 
+
+/* Handles the screen that shows the cards */
 var CardView = function() {
   this.currentCard;
   this.cardView;
   this.infoWrapper;
 }
 
-CardView.prototype.init = function(card) {
-  this.currentCard = card;
+CardView.prototype.init = function() {
+  var self = $(this);
   this.cardView = $('#card-image');
   this.cardDisplay = $('#card-display');
   this.infoWrapper = $('#card-info-wrapper');
+}
+
+CardView.prototype.bindEvents = function() {
+  var self = $(this);
+  $(this.currentCard).on('populateStart populateEnd', function(evt) {
+    self.trigger(evt.type);
+  });
+}
+
+CardView.prototype.unbindEvents = function() {
+  if ($(this.currentCard)) {
+    $(this.currentCard).off('populateStart populateEnd');
+  }
 }
 
 CardView.prototype.name = function(title) {
@@ -55,8 +94,10 @@ CardView.prototype.rulesText = function(text) {
   this.infoWrapper.find('#rules-text').text(text);
 }
 
-CardView.prototype.setCard = function(c) {
-  this.currentCard = c;
+CardView.prototype.setCard = function(card) {
+  this.unbindEvents();
+  this.currentCard = card;
+  this.bindEvents();
 }
 
 CardView.prototype.changeColor = function(color) {
@@ -72,16 +113,51 @@ CardView.prototype.changeColor = function(color) {
 }
 
 CardView.prototype.show = function() {
+  var self = this;
   this.cardView.attr('src', this.currentCard.imageUrl);
   this.name(this.currentCard.name);
   this.cardSet(this.currentCard.setCode);
   this.rulesText(this.currentCard.rulesText);
+
+  if (this.currentCard.allSets) {
+    $('#all-sets').removeClass('hidden');
+    var setList = $('<ul/>', {class: 'set-list'});
+    this.currentCard.allSets.forEach(function(set) {
+      var setEl = $('<li/>', {text: set, class: 'card-set'});
+      if (set === self.currentCard.setCode) {
+        setEl.addClass('current-set');
+      }
+      setList.append(setEl);
+    });
+    $('#all-sets').append(setList);
+  }
+
+  var colorMap = {
+    'g': 'green',
+    'b': 'black',
+    'u': 'blue',
+    'r': 'red',
+    'w': 'white',
+  }
+
+  if (this.currentCard.colors) {
+    if (this.currentCard.colors.length === 1) {
+      if (colorMap[this.currentCard.colors]) {
+        this.changeColor(colorMap[this.currentCard.colors]);
+      }
+    } else {
+      this.changeColor('gold');
+    }
+  } else {
+    this.changeColor('brown');
+  }
+
 }
 
 CardView.prototype.switchCard = function(card) {
   var self = this;
   if (!card.populated) {
-    $(card).on('populated', function(evt) {
+    $(card).on('populateEnd', function(evt) {
       self.setCard(card);
       self.show();
     });
