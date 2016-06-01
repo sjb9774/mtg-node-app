@@ -36,11 +36,13 @@ body {
 
 #card-spinner {
   color: #c6c6c6;
+  background-color: rgba(0, 0, 0, .6);
+  padding: 15px;
+  border-radius: 500px;
   position: absolute;
   top: 50%;
   left: 50%;
   font-size: 20pt;
-  padding: 10px 20px;
   transform: translateX(-50%) translateY(-50%);
   z-index: 10;
   animation: 1s spin;
@@ -88,11 +90,37 @@ body {
   background-color: rgba(0,0,0,.5);
 }
 
+#random-button-row {
+  text-align: center;
+}
+
+#random-button {
+  margin: 15px;
+  background-color: rgba(0, 0, 0, .8);
+  border: none;
+  color: #fff;
+  padding: 10px;
+  transition: background-color .25s;
+}
+
+#random-button:hover {
+  background-color: rgba(0, 0, 0, .4);
+}
+
+#set-art-wrapper {
+  overflow: hidden;
+}
+
 .set-list {
   color: #fff;
   line-height: 22pt;
   text-align: center;
   padding: 0px;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 500%;
+  overflow: auto;
 }
 
 .card-set {

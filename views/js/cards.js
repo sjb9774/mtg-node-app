@@ -2,7 +2,7 @@
 var Card = function(cardName, setCode) {
   this.name = cardName;
   this.setCode = setCode;
-  this.cardView = $('#card-image');
+  this.cardImage = $('#card-image');
 }
 
 Card.prototype.populate = function() {
@@ -28,9 +28,9 @@ Card.prototype._populate = function(cardData) {
   self.name = cardData.name;
   self.allSets = cardData.allSets;
   self.setCode = cardData.set;
-  self.cmc = cardData.cmc;
+  self.cmc = cardData.cmc || 0;
   self.multiverseId = cardData.multiverseId;
-  self.rulesText = cardData.rulesText;
+  self.rulesText = cardData.rulesText || '';
   self.types = cardData.types;
   self.colors = cardData.colors;
   self.manaCost = cardData.manaCost;
@@ -58,13 +58,13 @@ Card.prototype.random = function(callback) {
 /* Handles the screen that shows the cards */
 var CardView = function() {
   this.currentCard;
-  this.cardView;
+  this.cardImage;
   this.infoWrapper;
 }
 
 CardView.prototype.init = function() {
   var self = $(this);
-  this.cardView = $('#card-image');
+  this.cardImage = $('#card-image');
   this.cardDisplay = $('#card-display');
   this.infoWrapper = $('#card-info-wrapper');
 }
@@ -114,13 +114,13 @@ CardView.prototype.changeColor = function(color) {
 
 CardView.prototype.show = function() {
   var self = this;
-  this.cardView.attr('src', this.currentCard.imageUrl);
+  this.cardImage.attr('src', this.currentCard.imageUrl);
   this.name(this.currentCard.name);
   this.cardSet(this.currentCard.setCode);
   this.rulesText(this.currentCard.rulesText);
 
   if (this.currentCard.allSets) {
-    $('#all-sets').removeClass('hidden');
+    $('#all-sets').empty().removeClass('hidden');
     var setList = $('<ul/>', {class: 'set-list'});
     this.currentCard.allSets.forEach(function(set) {
       var setEl = $('<li/>', {text: set, class: 'card-set'});
@@ -132,27 +132,28 @@ CardView.prototype.show = function() {
     $('#all-sets').append(setList);
   }
 
-  var colorMap = {
-    'g': 'green',
-    'b': 'black',
-    'u': 'blue',
-    'r': 'red',
-    'w': 'white',
-  }
+  this.cardImage.one('load', function(evt) {
+    var colorMap = {
+      'g': 'green',
+      'b': 'black',
+      'u': 'blue',
+      'r': 'red',
+      'w': 'white',
+    }
 
-  if (this.currentCard.colors) {
-    if (this.currentCard.colors.length === 1) {
-      if (colorMap[this.currentCard.colors]) {
-        this.changeColor(colorMap[this.currentCard.colors]);
+    if (self.currentCard.colors) {
+      if (self.currentCard.colors.length === 1) {
+        if (colorMap[self.currentCard.colors]) {
+          self.changeColor(colorMap[self.currentCard.colors]);
+        }
+      } else {
+        self.changeColor('gold');
       }
     } else {
-      this.changeColor('gold');
+      self.changeColor('brown');
     }
-  } else {
-    this.changeColor('brown');
-  }
-
-}
+  });
+};
 
 CardView.prototype.switchCard = function(card) {
   var self = this;
@@ -166,4 +167,13 @@ CardView.prototype.switchCard = function(card) {
     self.setCard(card);
     self.show();
   }
-}
+};
+
+CardView.prototype.showRandom = function() {
+  var self = this;
+  var randomCard = new Card();
+  self.setCard(randomCard);
+  randomCard.random(function(card) {
+    self.switchCard(card);
+  });
+};

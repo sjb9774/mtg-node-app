@@ -7,21 +7,23 @@ $(function() {
     $(cardView).on('populateStart', function(evt) {
     }).on('populateEnd populateFail', function(evt) {
       fadeOut('#card-spinner');
+      $('#random-button').removeClass('hidden');
       $('#card-info-wrapper').removeClass('hidden');
     });
 
     $('#start-button').on('click', function(evt) {
       fadeIn('#card-spinner');
-      var randomCard = new Card();
-      cardView.setCard(randomCard);
-      randomCard.random(function(card) {
-        cardView.switchCard(card);
-      });
+      cardView.showRandom();
       $(evt.target).addClass('hidden');
       $('#overlay').one('transitionend', function(evt) {
         $(evt.target).removeClass('fade-out').addClass('hidden');
       });
       $('#overlay').addClass('fade-out');
+    });
+
+    $("#random-button").on("click", function(evt) {
+      fadeIn('#card-spinner');
+      cardView.showRandom();
     });
   });
 });
