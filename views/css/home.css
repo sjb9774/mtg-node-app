@@ -130,7 +130,8 @@ body {
 }
 
 .current-set {
-  color: #847b7b;
+  background-color: #451199;
+  padding: 0px 5px;
 }
 
 .empty {

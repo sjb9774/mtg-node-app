@@ -18,6 +18,9 @@ Card.prototype.populate = function() {
       else {
         $(self).trigger('populateFail');
       }
+    },
+    'error': function(resp) {
+      $(self).trigger('populateFail');
     }
   });
   $(self).trigger('populateStart');
@@ -36,6 +39,7 @@ Card.prototype._populate = function(cardData) {
   self.manaCost = cardData.manaCost;
   self.imageUrl = cardData.imageUrl;
   self.populated = true;
+  self.otherArts = cardData.otherArts || [];
 };
 
 Card.prototype.random = function(callback) {
@@ -50,6 +54,9 @@ Card.prototype.random = function(callback) {
         $(self).trigger('populateEnd');
         callback(self);
       }
+    },
+    'error': function(resp) {
+      $(self).trigger('populateFail');
     }
   });
 }
@@ -71,7 +78,7 @@ CardView.prototype.init = function() {
 
 CardView.prototype.bindEvents = function() {
   var self = $(this);
-  $(this.currentCard).on('populateStart populateEnd', function(evt) {
+  $(this.currentCard).on('populateStart populateEnd populateFail', function(evt) {
     self.trigger(evt.type);
   });
 }
@@ -130,6 +137,20 @@ CardView.prototype.show = function() {
       setList.append(setEl);
     });
     $('#all-sets').append(setList);
+  }
+
+  if (this.currentCard.otherArts && this.currentCard.otherArts.length > 0) {
+    $("#all-arts").empty().removeClass("hidden");
+    var artList = $('<ul/>', {class: "art-list"});
+    var allArts = [{multiverseId: this.currentCard.multiverseId}].concat(this.currentCard.otherArts);
+    allArts.sort(function(x, y){ return x["multiverseId"] <= y["multiverseId"] ? -1 : 1; });
+    allArts.forEach(function(art, i) {
+      var artLink = $("<a/>", {class: "art-link", text: i, href: "/card?multiverse_id=" + art["multiverseId"]});
+      var artEl = $("<li/>", {class: "art"});
+      artEl.append(artLink);
+      artList.append(artEl);
+    });
+    $('#all-arts').append(artList);
   }
 
   this.cardImage.one('load', function(evt) {

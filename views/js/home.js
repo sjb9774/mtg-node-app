@@ -7,8 +7,12 @@ $(function() {
     $(cardView).on('populateStart', function(evt) {
     }).on('populateEnd populateFail', function(evt) {
       fadeOut('#card-spinner');
-      $('#random-button').removeClass('hidden');
+      $('#random-button').removeClass('hidden').removeClass("disabled");
       $('#card-info-wrapper').removeClass('hidden');
+      if (evt.type === "populateFail") {
+        $("#random-button").addClass("disabled");
+        alert("There was a problem loading the card data.");
+      }
     });
 
     $('#start-button').on('click', function(evt) {

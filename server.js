@@ -4,7 +4,8 @@ var handler = new require('./js/handlers.js');
 var myHandler = new handler();
 
 app.get('/', myHandler.render('index.html'));
-app.get(['/api/:path', '/api/:path*'], myHandler.getJSON);
+app.get(['/api/:path', '/api/:path*'], myHandler.getApiJson);
+app.get('/card', myHandler.render('index.html'));
 
 app.use(express.static('./views'));
 app.use('/views/js/', express.static(__dirname + '/views/js'));
